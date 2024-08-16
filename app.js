@@ -1,31 +1,31 @@
-// require("dotenv").config();
+require("dotenv").config();
 
 const express = require("express");
 const logger = require("morgan");
-// const secureApp = require("helmet");
-// const bodyParser = require("body-parser");
-// const cors = require("cors");
-// const mongoose = require("mongoose");
+const secureApp = require("helmet");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const mongoose = require("mongoose");
 
 // setup connect mongodb by mongoose
-// mongoose
-//   .connect("mongodb://127.0.0.1:27017/nodejsapistarter")
-//   .then(() => console.log("Connected"))
-//   .catch((error) => console.error(`Fail ${error}`));
+mongoose
+  .connect("mongodb://127.0.0.1:27017/the_best_records")
+  .then(() => console.log("Connected"))
+  .catch((error) => console.error(`Fail ${error}`));
 
 const app = express();
-// app.use(secureApp());
+app.use(secureApp());
 
-// const deckRoute = require("./routes/deck");
-// const userRoute = require("./routes/user");
+const productRoute = require("./routes/product");
+const userRoute = require("./routes/user");
 
 // Middlewares
-// app.use(cors());
+app.use(cors());
 app.use(logger("dev"));
-// app.use(bodyParser.json());
+app.use(bodyParser.json());
 
-// app.use("/decks", deckRoute);
-// app.use("/users", userRoute);
+app.use("/products", productRoute);
+app.use("/users", userRoute);
 
 // Routes
 app.get("/", (req, res, next) => {
