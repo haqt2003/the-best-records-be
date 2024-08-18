@@ -9,16 +9,35 @@ const {
   schemas,
 } = require("../helpers/routerHelpers");
 
+const passport = require("passport");
+const passportConfig = require("../middlewares/passport");
+
 router
   .route("/")
   .get(UserControllers.index)
   .post(validateBody(schemas.userSchema), UserControllers.newUser);
 
-router.route("/secret").get(UserControllers.secret);
+router
+  .route("/auth/google")
+  .post(
+    passport.authenticate("google-plus-token", { session: false }),
+    UserControllers.authGoogle
+  );
+
+router
+  .route("/secret")
+  .get(
+    passport.authenticate("jwt", { session: false }),
+    UserControllers.secret
+  );
 
 router
   .route("/signin")
-  .post(validateBody(schemas.authSignInSchema), UserControllers.signIn);
+  .post(
+    validateBody(schemas.authSignInSchema),
+    passport.authenticate("local", { session: false }),
+    UserControllers.signIn
+  );
 
 router
   .route("/signup")

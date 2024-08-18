@@ -1,5 +1,3 @@
-const mongoose = require("mongoose");
-
 const User = require("../models/User");
 const Product = require("../models/Product");
 
@@ -35,6 +33,12 @@ const addToCart = async (req, res, next) => {
   }
   await user.save();
   return res.status(201).json({ success: true });
+};
+
+const authGoogle = async (req, res, next) => {
+  const token = encodedToken(req.user._id);
+  res.setHeader("Authorization", token);
+  return res.status(200).json({ success: true });
 };
 
 const deleteUser = async (req, res, next) => {
@@ -100,11 +104,13 @@ const replaceUser = async (req, res, next) => {
 };
 
 const secret = async (req, res, next) => {
-  console.log("secret");
+  return res.status(200).json({ resources: true });
 };
 
 const signIn = async (req, res, next) => {
-  console.log("signin");
+  const token = encodedToken(req.user._id);
+  res.setHeader("Authorization", token);
+  return res.status(200).json({ success: true });
 };
 
 const signUp = async (req, res, next) => {
@@ -144,6 +150,7 @@ const updateUser = async (req, res, next) => {
 
 module.exports = {
   addToCart,
+  authGoogle,
   deleteCartProduct,
   deleteUser,
   deleteUserCart,
