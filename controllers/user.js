@@ -24,7 +24,8 @@ const addToCart = async (req, res, next) => {
     (item) => item.product.toString() === productID.toString()
   );
   if (existingCartItem) {
-    existingCartItem.quantity += req.query.quantity || 1;
+    existingCartItem.quantity =
+      Number(existingCartItem.quantity) + Number(req.query.quantity) || 1;
   } else {
     user.cart.push({
       product: productID,
@@ -108,9 +109,11 @@ const secret = async (req, res, next) => {
 };
 
 const signIn = async (req, res, next) => {
+  const { email } = req.value.body;
+  const user = await User.findOne({ email });
   const token = encodedToken(req.user._id);
   res.setHeader("Authorization", token);
-  return res.status(200).json({ success: true });
+  return res.status(200).json(user);
 };
 
 const signUp = async (req, res, next) => {

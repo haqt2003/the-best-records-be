@@ -20,7 +20,13 @@ const productRoute = require("./routes/product");
 const userRoute = require("./routes/user");
 
 // Middlewares
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+    allowedHeaders: ["Authorization", "Content-Type"],
+    exposedHeaders: ["Authorization"],
+  })
+);
 app.use(logger("dev"));
 app.use(bodyParser.json());
 

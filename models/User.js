@@ -49,14 +49,17 @@ const UserSchema = new Schema({
 });
 
 UserSchema.pre("save", async function (next) {
-  try {
-    if (this.authType !== "local") next();
-    const salt = await bcrypt.genSalt(10);
-    const passwordHashed = await bcrypt.hash(this.password, salt);
-    this.password = passwordHashed;
-  } catch (error) {
-    next(error);
+  if (this.isModified("password") || this.isNew) {
+    try {
+      if (this.password) {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+      }
+    } catch (error) {
+      return next(error);
+    }
   }
+  next();
 });
 
 UserSchema.methods.isValidPassword = async function (newPassword) {

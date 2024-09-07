@@ -74,6 +74,7 @@ router
   .post(
     validateParam(schemas.idSchema, "userID"),
     validateParam(schemas.idSchema, "productID"),
+    passport.authenticate("jwt", { session: false }),
     UserControllers.addToCart
   )
   .patch(
