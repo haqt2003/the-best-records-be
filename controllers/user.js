@@ -3,11 +3,12 @@ const Product = require("../models/Product");
 
 const { JWT_SECRET } = require("../configs/index");
 const JWT = require("jsonwebtoken");
+const { use } = require("passport");
 
 const encodedToken = (userID) => {
   return JWT.sign(
     {
-      iss: "Tran Ha",
+      iss: "The Best Records",
       sub: userID,
       iat: new Date().getTime(),
       exp: new Date().setDate(new Date().getDate() + 3),
@@ -37,14 +38,15 @@ const addToCart = async (req, res, next) => {
 };
 
 const authGoogle = async (req, res, next) => {
+  const user = req.user;
   const token = encodedToken(req.user._id);
   res.setHeader("Authorization", token);
-  return res.status(200).json({ success: true });
+  return res.status(201).json(user);
 };
 
 const deleteUser = async (req, res, next) => {
   const { userID } = req.value.params;
-  const user = await User.findByIdAndDelete(userID);
+  await User.findByIdAndDelete(userID);
   return res.status(200).json({ success: true });
 };
 
@@ -88,7 +90,7 @@ const getUserCart = async (req, res, next) => {
 
 const index = async (req, res, next) => {
   const users = await User.find({});
-  return res.status(200).json({ user });
+  return res.status(200).json(users);
 };
 
 const newUser = async (req, res, next) => {
@@ -100,7 +102,9 @@ const newUser = async (req, res, next) => {
 const replaceUser = async (req, res, next) => {
   const { userID } = req.value.params;
   const newUser = req.value.body;
-  const result = await User.findByIdAndUpdate(userID, newUser);
+  const user = await User.findById(userID);
+  Object.assign(user, newUser);
+  await user.save();
   return res.status(200).json({ success: true });
 };
 
@@ -119,17 +123,19 @@ const signIn = async (req, res, next) => {
 const signUp = async (req, res, next) => {
   const { name, email, password } = req.value.body;
   const foundUser = await User.findOne({ email });
-  if (foundUser)
+  if (foundUser && foundUser.password)
     res.status(403).json({ error: { message: "Người dùng đã tồn tại" } });
+  else if (foundUser && !foundUser.password) {
+    foundUser.password = password;
+    await foundUser.save();
+    return res.status(201).json(foundUser);
+  }
 
   const newUser = new User({ name, email, password });
   await newUser.save();
-
   const token = encodedToken(newUser._id);
-
   res.setHeader("Authorization", token);
-
-  return res.status(201).json({ success: true });
+  return res.status(201).json(newUser);
 };
 
 const updateCartProduct = async (req, res, next) => {

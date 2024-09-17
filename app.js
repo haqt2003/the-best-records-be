@@ -18,6 +18,8 @@ app.use(secureApp());
 
 const productRoute = require("./routes/product");
 const userRoute = require("./routes/user");
+const adminRoute = require("./routes/admin");
+const orderRoute = require("./routes/order");
 
 // Middlewares
 app.use(
@@ -32,6 +34,8 @@ app.use(bodyParser.json());
 
 app.use("/products", productRoute);
 app.use("/users", userRoute);
+app.use("/admins", adminRoute);
+app.use("/orders", orderRoute);
 
 // Routes
 app.get("/", (req, res, next) => {

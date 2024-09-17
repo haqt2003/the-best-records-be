@@ -3,50 +3,74 @@ const Schema = mongoose.Schema;
 
 const bcrypt = require("bcryptjs");
 
-const UserSchema = new Schema({
-  name: {
-    type: String,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-  },
-  password: {
-    type: String,
-  },
-  avatar: {
-    type: String,
-  },
-  authGoogleID: {
-    type: String,
-    default: null,
-  },
-  authType: {
-    type: String,
-    enum: ["local", "google", "facebook"],
-    default: "local",
-  },
-  cart: [
-    {
-      product: {
+const UserSchema = new Schema(
+  {
+    name: {
+      type: String,
+    },
+    phonenumber: {
+      type: String,
+      default: "",
+    },
+    address: {
+      province: {
+        type: String,
+        default: "",
+      },
+      district: {
+        type: String,
+        default: "",
+      },
+      ward: {
+        type: String,
+        default: "",
+      },
+      detail: {
+        type: String,
+        default: "",
+      },
+    },
+    email: {
+      type: String,
+      required: true,
+      lowercase: true,
+    },
+    password: {
+      type: String,
+    },
+    avatar: {
+      type: String,
+    },
+    authGoogleID: {
+      type: String,
+      default: null,
+    },
+    authType: {
+      type: String,
+      enum: ["local", "google", "facebook"],
+      default: "local",
+    },
+    cart: [
+      {
+        product: {
+          type: Schema.Types.ObjectId,
+          ref: "Product",
+        },
+        quantity: {
+          type: Number,
+          default: 1,
+        },
+      },
+    ],
+    order: [
+      {
         type: Schema.Types.ObjectId,
-        ref: "Product",
+        ref: "Order",
       },
-      quantity: {
-        type: Number,
-        default: 1,
-      },
-    },
-  ],
-  order: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Order",
-    },
-  ],
-});
+    ],
+  },
+  { timestamps: true }
+);
 
 UserSchema.pre("save", async function (next) {
   if (this.isModified("password") || this.isNew) {

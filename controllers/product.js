@@ -14,7 +14,7 @@ const index = async (req, res, next) => {
 const newProduct = async (req, res, next) => {
   const newProduct = new Product(req.value.body);
   await newProduct.save();
-  return res.status(201).json({ product: newProduct });
+  return res.status(201).json({ success: true });
 };
 
 const replaceProduct = async (req, res, next) => {
@@ -31,10 +31,17 @@ const updateProduct = async (req, res, next) => {
   return res.status(200).json({ success: true });
 };
 
+const deleteProduct = async (req, res, next) => {
+  const { productID } = req.value.params;
+  await Product.findByIdAndDelete(productID);
+  return res.status(200).json({ success: true });
+};
+
 module.exports = {
   getProduct,
   index,
   newProduct,
   replaceProduct,
   updateProduct,
+  deleteProduct,
 };

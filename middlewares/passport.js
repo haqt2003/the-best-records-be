@@ -1,7 +1,7 @@
 const passport = require("passport");
 const JwtStrategy = require("passport-jwt").Strategy;
 const LocalStrategy = require("passport-local").Strategy;
-const GooglePlusTokenStrategy = require("passport-google-plus-token");
+const GoogleTokenStrategy = require("passport-google-token").Strategy;
 const { ExtractJwt } = require("passport-jwt");
 const {
   JWT_SECRET,
@@ -30,9 +30,9 @@ passport.use(
   )
 );
 
-// Passport Goo gle
+// Passport Google
 passport.use(
-  new GooglePlusTokenStrategy(
+  new GoogleTokenStrategy(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
@@ -43,17 +43,29 @@ passport.use(
           authGoogleID: profile.id,
           authType: "google",
         });
-
         if (user) return done(null, user);
-        const newUser = new User({
-          authType: "google",
-          authGoogleID: profile.id,
-          name: profile.displayName,
+
+        const userEmail = await User.findOne({
           email: profile.emails[0].value,
-          avatar: profile.photos[0].value,
         });
-        await newUser.save();
-        done(null, newUser);
+        if (userEmail) {
+          userEmail.avatar = profile._json.picture;
+          userEmail.authType = "google";
+          userEmail.authGoogleID = profile.id;
+          userEmail.name = profile.displayName;
+          await userEmail.save();
+          done(null, userEmail);
+        } else {
+          const newUser = new User({
+            authType: "google",
+            authGoogleID: profile.id,
+            name: profile.displayName,
+            email: profile.emails[0].value,
+            avatar: profile._json.picture,
+          });
+          await newUser.save();
+          done(null, newUser);
+        }
       } catch (error) {
         done(error, false);
       }

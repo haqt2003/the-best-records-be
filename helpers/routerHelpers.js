@@ -47,6 +47,13 @@ const schemas = {
   productSchema: Joi.object().keys({
     title: Joi.string().min(1).required(),
     price: Joi.string().min(5).required(),
+    singer: Joi.string().allow("").optional(),
+    img: Joi.string().allow("").optional(),
+    song: Joi.string().allow("").optional(),
+    prePrice: Joi.string().allow("").optional(),
+    type: Joi.string().allow("").optional(),
+    duration: Joi.string().allow("").optional(),
+    description: Joi.string().allow("").optional(),
   }),
 
   idSchema: Joi.object().keys({
@@ -57,7 +64,16 @@ const schemas = {
 
   userSchema: Joi.object().keys({
     name: Joi.string().min(1).required(),
+    phonenumber: Joi.string().allow("").optional(),
     email: Joi.string().email().required(),
+    password: Joi.string().min(6).required(),
+    avatar: Joi.string().allow("").optional(),
+    address: {
+      province: Joi.string().allow("").optional(),
+      district: Joi.string().allow("").optional(),
+      ward: Joi.string().allow("").optional(),
+      detail: Joi.string().allow("").optional(),
+    },
   }),
 
   userOptionalSchema: Joi.object().keys({

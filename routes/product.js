@@ -30,6 +30,9 @@ router
     validateParam(schemas.idSchema, "productID"),
     ProductController.updateProduct
   )
-  .delete();
+  .delete(
+    validateParam(schemas.idSchema, "productID"),
+    ProductController.deleteProduct
+  );
 
 module.exports = router;

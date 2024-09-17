@@ -20,7 +20,7 @@ router
 router
   .route("/auth/google")
   .post(
-    passport.authenticate("google-plus-token", { session: false }),
+    passport.authenticate("google-token", { session: false }),
     UserControllers.authGoogle
   );
 

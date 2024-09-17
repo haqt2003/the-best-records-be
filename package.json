@@ -19,7 +19,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.1",
     "passport": "^0.7.0",
-    "passport-google-plus-token": "^2.1.0",
+    "passport-google-token": "^0.1.2",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0"
   },
