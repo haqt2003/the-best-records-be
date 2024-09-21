@@ -9,7 +9,9 @@ const mongoose = require("mongoose");
 
 // setup connect mongodb by mongoose
 mongoose
-  .connect("mongodb://127.0.0.1:27017/the_best_records")
+  .connect(
+    "mongodb+srv://haqt2003:quanghah03@thebestrecords.fody4.mongodb.net/the_best_records?retryWrites=true&w=majority&appName=TheBestRecords"
+  )
   .then(() => console.log("Connected"))
   .catch((error) => console.error(`Fail ${error}`));
 
