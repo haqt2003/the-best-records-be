@@ -77,8 +77,17 @@ const schemas = {
   }),
 
   userOptionalSchema: Joi.object().keys({
-    name: Joi.string().min(1),
-    email: Joi.string().email(),
+    name: Joi.string().min(1).optional(),
+    phonenumber: Joi.string().allow("").optional(),
+    email: Joi.string().email().optional(),
+    password: Joi.string().min(6).optional(),
+    avatar: Joi.string().allow("").optional(),
+    address: {
+      province: Joi.string().allow("").optional(),
+      district: Joi.string().allow("").optional(),
+      ward: Joi.string().allow("").optional(),
+      detail: Joi.string().allow("").optional(),
+    },
   }),
 };
 

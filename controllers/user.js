@@ -152,8 +152,19 @@ const updateCartProduct = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   const { userID } = req.value.params;
-  const newUser = req.value.body;
-  const result = await User.findByIdAndUpdate(userID, newUser);
+  const newUser = req.body;
+  const user = await User.findById(userID);
+  Object.assign(user, newUser);
+  await user.save();
+  return res.status(200).json({ success: true });
+};
+
+const updateAvatar = async (req, res, next) => {
+  const { userID } = req.value.params;
+  const { avatar } = req.body;
+  const user = await User.findById(userID);
+  user.avatar = avatar;
+  await user.save();
   return res.status(200).json({ success: true });
 };
 
@@ -173,4 +184,5 @@ module.exports = {
   signUp,
   updateUser,
   updateCartProduct,
+  updateAvatar,
 };

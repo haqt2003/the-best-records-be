@@ -51,14 +51,17 @@ router
     validateBody(schemas.userSchema),
     UserControllers.replaceUser
   )
-  .patch(
-    validateParam(schemas.idSchema, "userID"),
-    validateBody(schemas.userOptionalSchema),
-    UserControllers.updateUser
-  )
+  .patch(validateParam(schemas.idSchema, "userID"), UserControllers.updateUser)
   .delete(
     validateParam(schemas.idSchema, "userID"),
     UserControllers.deleteUser
+  );
+
+router
+  .route("/:userID/avatar")
+  .patch(
+    validateParam(schemas.idSchema, "userID"),
+    UserControllers.updateAvatar
   );
 
 router
