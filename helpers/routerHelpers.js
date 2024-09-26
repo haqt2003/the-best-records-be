@@ -68,6 +68,8 @@ const schemas = {
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
     avatar: Joi.string().allow("").optional(),
+    verificationCode: Joi.string().allow("").optional(),
+    verificationCodeExpires: Joi.date().optional(),
     address: {
       province: Joi.string().allow("").optional(),
       district: Joi.string().allow("").optional(),
@@ -82,6 +84,8 @@ const schemas = {
     email: Joi.string().email().optional(),
     password: Joi.string().min(6).optional(),
     avatar: Joi.string().allow("").optional(),
+    verificationCode: Joi.string().allow("").optional(),
+    verificationCodeExpires: Joi.date().optional(),
     address: {
       province: Joi.string().allow("").optional(),
       district: Joi.string().allow("").optional(),

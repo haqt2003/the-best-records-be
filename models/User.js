@@ -38,6 +38,14 @@ const UserSchema = new Schema(
     password: {
       type: String,
     },
+    verificationCode: {
+      type: String,
+      default: null,
+    },
+    verificationCodeExpires: {
+      type: Date,
+      default: null,
+    },
     avatar: {
       type: String,
     },

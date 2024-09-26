@@ -43,6 +43,12 @@ router
   .route("/signup")
   .post(validateBody(schemas.authSignUpSchema), UserControllers.signUp);
 
+router.route("/forgot-password").post(UserControllers.forgotPassword);
+
+router.route("/confirm-code").post(UserControllers.confirmCode);
+
+router.route("/new-password").post(UserControllers.newPassword);
+
 router
   .route("/:userID")
   .get(validateParam(schemas.idSchema, "userID"), UserControllers.getUser)

@@ -1,6 +1,8 @@
 const User = require("../models/User");
 const Product = require("../models/Product");
 
+const sendMail = require("../helpers/sendMail");
+
 const { JWT_SECRET } = require("../configs/index");
 const JWT = require("jsonwebtoken");
 const { use } = require("passport");
@@ -138,6 +140,37 @@ const signUp = async (req, res, next) => {
   return res.status(201).json(newUser);
 };
 
+const forgotPassword = async (req, res, next) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email: email });
+  if (!user) return res.status(400).json({ message: "Bạn chưa có tài khoản!" });
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  user.verificationCode = code;
+  user.verificationCodeExpires = new Date(Date.now() + 15 * 60 * 1000);
+  await user.save();
+  await sendMail(email, code);
+  return res.status(200).json({ success: true });
+};
+
+const confirmCode = async (req, res, next) => {
+  const { email, code } = req.body;
+  const user = await User.findOne({ email: email });
+  if (user.verificationCodeExpires < Date.now())
+    return res.status(400).json({ message: "Verification code has expired" });
+  if (user.verificationCode !== code)
+    return res.status(400).json({ message: "Invalid verification code" });
+  return res.status(200).json({ message: "Verification successful" });
+};
+
+const newPassword = async (req, res, next) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email: email });
+  if (!user) return res.status(400).json({ message: "Bạn chưa có tài khoản!" });
+  user.password = password;
+  await user.save();
+  return res.status(200).json({ success: true });
+};
+
 const updateCartProduct = async (req, res, next) => {
   const { userID, productID } = req.value.params;
   const user = await User.findById(userID);
@@ -185,4 +218,7 @@ module.exports = {
   updateUser,
   updateCartProduct,
   updateAvatar,
+  forgotPassword,
+  confirmCode,
+  newPassword,
 };
