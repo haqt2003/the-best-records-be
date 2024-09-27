@@ -13,10 +13,10 @@ const sendMail = async (email, code) => {
 
   try {
     const info = await transporter.sendMail({
-      from: "The Best Records", // sender address
+      from: '"The Best Records" <no-reply@thebestrecords.com>', // sender address
       to: email,
-      subject: "THE BEST RECORDS - Forgot password", // Subject line
-      text: `Mã xác thực của bạn là: ${code}`, // plain text body
+      subject: "Quên mật khẩu", // Subject line
+      text: `Mã xác minh của bạn là: ${code}`, // plain text body
       // html: "<b>Hello world?</b>", // html body
     });
   } catch (error) {
